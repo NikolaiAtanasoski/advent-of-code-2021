@@ -7,6 +7,7 @@ def load_input(file_name):
 
 
 filename = f"{Path(__file__).stem}.input"
+print(filename)
 instructions = load_input(filename)
 print(instructions)
 
