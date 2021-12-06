@@ -1,22 +1,5 @@
 from pathlib import Path
-
-
-class AmkBit:
-
-    def __init__(self):
-        self.ones = 0
-        self.zeroes = 0
-
-    def add_count(self, bit: str):
-        if bit == "1":
-            self.ones += 1
-        elif bit == "0":
-            self.zeroes += 1
-
-    def get_most_least_common(self):
-        if self.ones > self.zeroes:
-            return (1, 0)
-        return (0, 1)
+from collections import Counter
 
 
 def load_input(file_name):
@@ -27,25 +10,32 @@ def load_input(file_name):
 filename = f"{Path(__file__).stem}.input"
 numbers = load_input(filename)
 
-gamma = 0  # gamma rate -> most common bit
-epsilon = 0  # epsilon rate -> least common bit
+oxygen = numbers.copy()  # gamma rate -> most common bit
+co2 = numbers.copy()  # epsilon rate -> least common bit
 
-amk_bits = []
-for i in range(0, 12):
-    amk_bits.append(AmkBit())
+index = 0
+while len(oxygen) > 1:
+    jojo = [x[index] for x in oxygen]
+    _count = Counter(jojo)
+    if _count['1'] >= _count['0']:
+        oxygen = [x for x in oxygen if x[index] == '1']
+    elif _count['1'] < _count['0']:
+        oxygen = [x for x in oxygen if x[index] == '0']
+    index += 1
 
+print(f"oxygen: {oxygen}")
 
-for number in numbers:
-    for i in range(0, 12):
-        amk_bits[i].add_count(number[i])
+index = 0
+while len(co2) > 1:
+    jojo = [x[index] for x in co2]
+    _count = Counter(jojo)
+    if _count['1'] >= _count['0']:
+        co2 = [x for x in co2 if x[index] == '0']
+    elif _count['1'] < _count['0']:
+        co2 = [x for x in co2 if x[index] == '1']
+    index += 1
 
-mulitplier = 2 ** 11
-for amk_bit in amk_bits:
-    _gamma, _epsilon = amk_bit.get_most_least_common()
-    gamma += _gamma * mulitplier
-    epsilon += _epsilon * mulitplier
-    mulitplier = int(mulitplier / 2)
+print(f"co2: {co2}")
 
-result = gamma * epsilon
-print(f"gamma: {gamma}, epsilon: {epsilon}")
-print(f"result: {result}")
+result = int(oxygen[0], 2) * int(co2[0], 2)
+print(result)
